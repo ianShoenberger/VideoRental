@@ -16,6 +16,14 @@ textarea {
     max-width: 280px;
 }
 
+.navbar-inverse {
+background-color: #03437b;
+    color: white;
+}
+
+.navbar-brand {
+    font-size:1.8em;
+}
 /* styles for validation helpers */
 .field-validation-error {
     color: #b94a48;

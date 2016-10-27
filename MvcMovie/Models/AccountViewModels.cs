@@ -46,6 +46,16 @@ namespace MvcMovie.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+
+        [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
 
