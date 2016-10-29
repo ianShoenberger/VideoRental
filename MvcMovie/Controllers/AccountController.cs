@@ -88,8 +88,8 @@ namespace MvcMovie.Controllers
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);
-                    var UserManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(context));
-                    UserManager.AddToRole(user.Id, context.Roles.SingleOrDefault(r => r.Name == "User").Name);
+                    var UsrMngr = new UserManager<IdentityUser>(new UserStore<IdentityUser>(context));
+                    UsrMngr.AddToRole(user.Id, context.Roles.SingleOrDefault(r => r.Name == "User").Name);
                     System.Diagnostics.Debug.WriteLine("registration succeded");
                     return RedirectToAction("Index", "Home");
                 }
