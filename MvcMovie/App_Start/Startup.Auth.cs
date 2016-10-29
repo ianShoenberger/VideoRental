@@ -2,6 +2,7 @@
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Microsoft.AspNet.Identity;
+using System;
 
 namespace MvcMovie
 {
@@ -11,10 +12,14 @@ namespace MvcMovie
         public void ConfigureAuth(IAppBuilder app)
         {
             // Enable the application to use a cookie to store information for the signed in user
+            int AuthCookieExpirationTime = 20;
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login")
+                LoginPath = new PathString("/Account/Login"),
+                ExpireTimeSpan = TimeSpan.FromMinutes(AuthCookieExpirationTime),
+                SlidingExpiration = true,
+                LogoutPath = new PathString("/Account/LogOff")
             });
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
