@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MvcMovie.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace MvcMovie.Controllers
 {
@@ -118,6 +120,17 @@ namespace MvcMovie.Controllers
         {
             Movie movie = db.Movies.Find(id);
             db.Movies.Remove(movie);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [Authorize]
+        public ActionResult Rent(int id)
+        {
+            Movie movie = db.Movies.Find(id);
+            UserManager<ApplicationUser> UserMgr = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            ApplicationUser currentUser = UserMgr.FindById(User.Identity.GetUserId());
+            movie.Renter = currentUser;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
