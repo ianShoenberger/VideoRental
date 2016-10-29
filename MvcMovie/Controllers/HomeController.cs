@@ -15,14 +15,14 @@ namespace MvcMovie.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "We've got you covered. Stocking films that amaze, excite, scare, and inspire is our specialty. Est. 2016";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Call Lumbardh for any issues you might have, or if you just need someone to chat with.";
 
             return View();
         }
