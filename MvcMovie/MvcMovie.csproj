@@ -174,6 +174,10 @@
     <Compile Include="Migrations\201610272204094_ChangedUserFields.Designer.cs">
       <DependentUpon>201610272204094_ChangedUserFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610291318556_LatestChanges.cs" />
+    <Compile Include="Migrations\201610291318556_LatestChanges.Designer.cs">
+      <DependentUpon>201610291318556_LatestChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -253,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610272204094_ChangedUserFields.resx">
       <DependentUpon>201610272204094_ChangedUserFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610291318556_LatestChanges.resx">
+      <DependentUpon>201610291318556_LatestChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

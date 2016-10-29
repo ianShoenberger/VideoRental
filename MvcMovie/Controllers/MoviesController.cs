@@ -10,6 +10,7 @@ using MvcMovie.Models;
 
 namespace MvcMovie.Controllers
 {
+    
     public class MoviesController : Controller
     {
         private MovieDBContext db = new MovieDBContext();
@@ -36,7 +37,7 @@ namespace MvcMovie.Controllers
         }
 
         // GET: /Movies/Create
-        [Authorize]
+        [Authorize(Roles ="Administrator")]
         public ActionResult Create()
         {
             return View();
@@ -47,8 +48,7 @@ namespace MvcMovie.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
-
+        [Authorize(Roles ="Administrator")]
         public ActionResult Create([Bind(Include="ID,Title,ReleaseDate,Genre,Price")] Movie movie)
         {
             if (ModelState.IsValid)
@@ -62,8 +62,7 @@ namespace MvcMovie.Controllers
         }
 
         // GET: /Movies/Edit/5
-        [Authorize]
-
+        [Authorize(Roles = "Administrator")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -82,8 +81,7 @@ namespace MvcMovie.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize]
-
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include="ID,Title,ReleaseDate,Genre,Price")] Movie movie)
         {
@@ -97,8 +95,7 @@ namespace MvcMovie.Controllers
         }
 
         // GET: /Movies/Delete/5
-        [Authorize]
-
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -114,8 +111,7 @@ namespace MvcMovie.Controllers
         }
 
         // POST: /Movies/Delete/5
-        [Authorize]
-
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -133,6 +129,24 @@ namespace MvcMovie.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+    }
+
+    /* The authorize attribute returns a login page for unauthorized page access. In order to return 
+     * a 403 error page, I added the following class that creates a new attribute with the same name */
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    public class AuthorizeAttribute : System.Web.Mvc.AuthorizeAttribute
+    {
+        protected override void HandleUnauthorizedRequest(System.Web.Mvc.AuthorizationContext filterContext)
+        {
+            if (filterContext.HttpContext.Request.IsAuthenticated)
+            {
+                filterContext.Result = new System.Web.Mvc.HttpStatusCodeResult((int)System.Net.HttpStatusCode.Forbidden);
+            }
+            else
+            {
+                base.HandleUnauthorizedRequest(filterContext);
+            }
         }
     }
 }

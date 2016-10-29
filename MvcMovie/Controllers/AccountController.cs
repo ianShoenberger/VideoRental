@@ -15,6 +15,7 @@ namespace MvcMovie.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext context = new ApplicationDbContext();
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
@@ -83,12 +84,12 @@ namespace MvcMovie.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser() { UserName = model.UserName };
-                System.Diagnostics.Debug.WriteLine("model state valid in register post");
-
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);
+                    var UserManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(context));
+                    UserManager.AddToRole(user.Id, context.Roles.SingleOrDefault(r => r.Name == "User").Name);
                     System.Diagnostics.Debug.WriteLine("registration succeded");
                     return RedirectToAction("Index", "Home");
                 }
@@ -96,8 +97,6 @@ namespace MvcMovie.Controllers
                 {
                     AddErrors(result);
                     System.Diagnostics.Debug.WriteLine("unsuccessful registration");
-
-
                 }
             }
 
