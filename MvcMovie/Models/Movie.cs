@@ -12,14 +12,11 @@ namespace MvcMovie.Models
         public DateTime ReleaseDate { get; set; }
         public string Genre { get; set; }
         public decimal Price { get; set; }
-
-        [ForeignKey("ApplicationUser")]
-        public virtual ApplicationUser Renter { get; set; }
+        public string RenterId { get; set; }
     }
 
     public class MovieDBContext : DbContext
     {
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<ApplicationUser> Users { get; set; }
     }
 }

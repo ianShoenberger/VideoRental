@@ -128,9 +128,9 @@ namespace MvcMovie.Controllers
         public ActionResult Rent(int id)
         {
             Movie movie = db.Movies.Find(id);
-            UserManager<ApplicationUser> UserMgr = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            ApplicationUser currentUser = UserMgr.FindById(User.Identity.GetUserId());
-            movie.Renter = currentUser;
+            //UserManager<ApplicationUser> UserMgr = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            //ApplicationUser currentUser = UserMgr.FindById(User.Identity.GetUserId());
+            movie.RenterId = User.Identity.GetUserId();
             db.SaveChanges();
             return RedirectToAction("Index");
         }
