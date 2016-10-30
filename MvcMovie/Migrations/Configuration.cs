@@ -12,7 +12,7 @@ namespace MvcMovie.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "MvcMovie.Models.ApplicationDbContext";
         }
 
@@ -36,6 +36,18 @@ namespace MvcMovie.Migrations
             };
             context.Users.AddOrUpdate(p => p.UserName, AdminUser);
 
+            string NormalUserPassword = passwordHash.HashPassword("111111");
+            ApplicationUser NormalUser = new ApplicationUser()
+            {
+                UserName = "John",
+                FirstName = "John",
+                LastName = "Wick",
+                Address = "3 W Squire Dr, Rochester, NY",
+                PasswordHash = NormalUserPassword
+            };
+
+            context.Users.AddOrUpdate(u => u.UserName, NormalUser);
+
             IdentityRole AdminRole = new IdentityRole()
             {
                 Name = "Administrator"
@@ -46,11 +58,12 @@ namespace MvcMovie.Migrations
             };
             context.Roles.AddOrUpdate(u => u.Name, AdminRole);
             context.Roles.AddOrUpdate(u => u.Name, UserRole);
+
             context.SaveChanges();
 
             var UserManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(context));
             UserManager.AddToRole(AdminUser.Id, AdminRole.Name);
-
+            UserManager.AddToRole(NormalUser.Id, UserRole.Name);
 
 
         }
