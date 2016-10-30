@@ -16,6 +16,7 @@ namespace MvcMovie.Controllers
     public class MoviesController : Controller
     {
         private MovieDBContext db = new MovieDBContext();
+        private UserManager<ApplicationUser> UserMgr = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
         // GET: /Movies/
         public ActionResult Index()
@@ -125,12 +126,53 @@ namespace MvcMovie.Controllers
         }
 
         [Authorize]
-        public ActionResult Rent(int id)
+        public ActionResult Rental(int id)
         {
             Movie movie = db.Movies.Find(id);
-            //UserManager<ApplicationUser> UserMgr = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            //ApplicationUser currentUser = UserMgr.FindById(User.Identity.GetUserId());
-            movie.RenterId = User.Identity.GetUserId();
+            if(String.IsNullOrEmpty(movie.RenterId))
+            {
+                movie.RenterId = User.Identity.GetUserId();
+                db.SaveChanges();
+                ApplicationUser currentUser = UserMgr.FindById(User.Identity.GetUserId());
+                ViewBag.RenterAddress = currentUser.Address;
+                return View(movie);
+            }
+            else
+            {
+                return RedirectToAction("RentalNotAvailable");
+            }
+            
+        }
+
+        public ActionResult RentalNotAvailable()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Return(int id)
+        {
+            Movie movie = db.Movies.Find(id);
+            if (movie != null && !String.IsNullOrEmpty(movie.RenterId))
+            {
+                ApplicationUser renter = UserMgr.FindById(movie.RenterId);
+                ViewBag.RenterName = renter.UserName;
+                return View(movie);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        // POST: /Movies/Return/5
+        [Authorize(Roles = "Administrator")]
+        [HttpPost, ActionName("Return")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ReturnConfirmed(int id)
+        {
+            Movie movie = db.Movies.Find(id);
+            movie.RenterId = "";
             db.SaveChanges();
             return RedirectToAction("Index");
         }

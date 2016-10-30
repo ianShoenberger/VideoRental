@@ -23,7 +23,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
-        <th></th>
+        <th>
+            Available?
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -41,10 +43,20 @@
             @Html.DisplayFor(modelItem => item.Price)
         </td>
         <td>
+            @String.IsNullOrEmpty(item.RenterId)
+        </td>
+        <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
             @Html.ActionLink("Details", "Details", new { id=item.ID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ID }) |
-            @Html.ActionLink("Rent", "Rent", new { id = item.ID })
+            @if (User.IsInRole("Administrator"))
+            {
+                @Html.ActionLink("Return", "Return", new { id = item.ID });
+            }
+            else
+            {
+                @Html.ActionLink("Rent", "Rental", new { id = item.ID });
+            }
         </td>
     </tr>
 }
